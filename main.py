@@ -3,8 +3,23 @@ import tabulate
 
 
 def qsort(a, pivot_fn):
-    ## TO DO
-    pass
+  if len(a) <= 1:
+    return a
+
+  pivot = pivot_fn(a)
+  left = [x for x in a if x < pivot]
+  middle = [x for x in a if x == pivot]
+  right = [x for x in a if x > pivot]
+
+  return qsort(left, pivot_fn) + middle + qsort(right, pivot_fn)
+
+def selection_sort_recursive(L):
+  if (len(L) == 1):
+      return(L)
+  else:
+      m = L.index(min(L))
+      L[0], L[m] = L[m], L[0]
+      return    selection_sort_recursive(L[1:])
     
 def time_search(sort_fn, mylist):
     """
@@ -30,32 +45,40 @@ def time_search(sort_fn, mylist):
     ###
 
 def compare_sort(sizes=[100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]):
-    """
-    Compare the running time of different sorting algorithms.
-
-    Returns:
-      A list of tuples of the form
-      (n, linear_search_time, binary_search_time)
-      indicating the number of milliseconds it takes
-      for each method to run on each value of n
-    """
-    ### TODO - sorting algorithms for comparison
-    qsort_fixed_pivot = # 
-    qsort_random_pivot = #
-    tim_sort = #
+    def qsort_fixed_pivot(a):
+        return qsort(a, sizes[a])
+  
+    def qsort_random_pivot(a):
+        return qsort(a, sizes[a])
+  
+    def ssort(a):
+        return selection_sort_recursive(a)
+  
     result = []
+  
+    qsort_fixed_pivot = qsort_fixed_pivot(sizes[])
+    qsort_random_pivot = qsort_random_pivot(random.choice)
+    ssort = selection_sort_recursive()
+  
     for size in sizes:
-        # create list in ascending order
-        mylist = list(range(size))
-        # shuffles list if needed
-        #random.shuffle(mylist)
+        mylist_random = list(range(size))
+        random.shuffle(mylist_random)
+  
+        mylist_sorted = list(range(size))
+  
         result.append([
-            len(mylist),
-            time_search(qsort_fixed_pivot, mylist),
-            time_search(qsort_random_pivot, mylist),
+            len(mylist_random),
+            time_search(qsort_fixed_pivot, mylist_random),
+            time_search(qsort_random_pivot, mylist_random),
+            time_search(ssort, mylist_random),
+            time_search(sorted, mylist_random),
+            time_search(qsort_fixed_pivot, mylist_sorted),
+            time_search(qsort_random_pivot, mylist_sorted),
+            time_search(ssort, mylist_sorted),
+            time_search(sorted, mylist_sorted)
         ])
     return result
-    ###
+
 
 def print_results(results):
     """ change as needed for comparisons """
@@ -68,4 +91,7 @@ def test_print():
     print_results(compare_sort())
 
 random.seed()
+result_random = compare_sort()
+result_sorted = compare_sort()
+result = compare_sort()
 test_print()
